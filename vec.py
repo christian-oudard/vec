@@ -34,11 +34,11 @@ def cross(v1, v2):
             x1*y2 - y1*x2)
 
 def mul(v, c):
-    """Multiply a vector by a scalar, and return the result."""
+    """Multiply a vector by a scalar."""
     return tuple(n*c for n in v)
 
 def div(v, c):
-    """Divide a vector by a scalar, and return the result."""
+    """Divide a vector by a scalar."""
     return tuple(n/c for n in v)
 
 def neg(v):
@@ -46,7 +46,7 @@ def neg(v):
     return tuple(-n for n in v)
 
 def mag2(v):
-    """Find the squared magnitude of a vector."""
+    """Calculate the squared magnitude of a vector."""
     return sum(n**2 for n in v)
 
 def mag(v):
@@ -72,12 +72,3 @@ def avg(*args):
 def angle(v1, v2):
     """Find the angle in radians between two vectors."""
     return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
-
-def project(v1, v2):
-    """Find the vector projection of v1 onto v2."""
-    return None #STUB
-
-def setdir(v1, v2):
-    """Return a vector with the magnitude of v1 and the direction of v2."""
-    return None #STUB
-

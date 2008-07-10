@@ -68,21 +68,6 @@ class TestVec(unittest.TestCase):
             self.assertAlmostEqual(angle(v2, v1), a) # both orders
         for v in test_vectors:
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
-   
-#     def test_project(self):
-#         self.assertEqual(project((-4,4), (1,0)), (-4, 0))
-#         self.assertAlmostEqual(mag(project((-3, 5), (4,4))), mag((1,1)))
-#         self.assertAlmostEqual(angle(project((-3, 5), (-1,-1)), (0, 1), angle((1,1), (1,0))))
-
-#     def test_setdir(self):
-#         for v in test_vectors:
-#             v1 = setdir(v, (0,1))
-#             self.assertEqual(v[0], 0)
-#             v2 = setdir(v, (1,1))
-#             self.assertEqual(v[0], v[1])
-#             oldmag = mag(v)
-#             v3 = setdir(v, (12342.235, -23523.6308))
-#             self.assertEqual(mag(v), oldmag)
 
 if __name__ == '__main__':
     try:
