@@ -5,7 +5,7 @@ is modified in-place.
 """
 
 from __future__ import division
-from math import sqrt
+from math import sqrt, acos
 
 def add(*args):
     """Calculate the vector addition of two or more vectors."""
@@ -68,3 +68,16 @@ def norm(v, c=1):
 def avg(*args):
     """Find the vector average of two or more points."""
     return div(add(*args), len(args));
+
+def angle(v1, v2):
+    """Find the angle in radians between two vectors."""
+    return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
+
+def project(v1, v2):
+    """Find the vector projection of v1 onto v2."""
+    return None #STUB
+
+def setdir(v1, v2):
+    """Return a vector with the magnitude of v1 and the direction of v2."""
+    return None #STUB
+
