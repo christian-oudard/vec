@@ -1,22 +1,22 @@
 #! /usr/bin/env python
 
-#TODO
-# add test vectors for 3 and more dimensions
-
 import unittest
 import math
 
 from vec import *
 
-test_vectors = ((2, 4),
-            (2.5, 53.342),
-            (-2, -4),
-            (1/3.0, 2.323423),
-            (0, -3),
-            (53, 0)
-            )
-specialvals = ((0,0),
-               )
+test_vectors = [
+    (2, 4),
+    (2.5, 53.342),
+    (-2, -4),
+    (1/3.0, 2.323423),
+    (0, -3),
+    (53, 0),
+    (1, 2, 3),
+]
+specialvals = [
+    (0,0),
+]
 
 class TestVec(unittest.TestCase):
     def test_mag(self):
@@ -70,9 +70,4 @@ class TestVec(unittest.TestCase):
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
 
 if __name__ == '__main__':
-    try:
-        import sys
-        sys.argv.append('-v')
-        unittest.main()
-    except SystemExit:
-        pass
+    unittest.main()
