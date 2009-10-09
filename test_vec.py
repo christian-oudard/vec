@@ -41,6 +41,11 @@ class TestVec(unittest.TestCase):
 
     def test_add(self):
         self.assertEqual(add((1, 1), (3, 5)), (4, 6))
+        self.assertEqual(add((1, 1, 1), (1, 1)), (2, 2, 1))
+
+    def test_vecfrom(self):
+        self.assertEqual(vecfrom((1, 1), (2, 2)), (1, 1))
+        self.assertEqual(vecfrom((0, 0), (1, 1, 1)), (1, 1, 1))
 
     def test_mul(self):
         self.assertEqual(mul((2, 3), 2), (4, 6))
@@ -52,6 +57,7 @@ class TestVec(unittest.TestCase):
 
     def test_dot(self):
         self.assertEqual(dot((1, 2), (3, 4)), 11)
+        self.assertEqual(dot((1,), (3, 4, 0, 0)), 3)
         for v in test_vectors:
             self.assertEqual(dot(v, (0, 0)), 0)
 
@@ -60,7 +66,7 @@ class TestVec(unittest.TestCase):
                       ((7,-7), (1,0), math.pi/4),
                       ((2,0), (-1,0), math.pi),
                       ((1,0), (1,math.sqrt(3)), math.pi/3),
-                      ((3,0), (math.sqrt(3),1), math.pi/6), 
+                      ((3,0), (math.sqrt(3),1), math.pi/6),
                       ((2,2), (1,-1), math.pi/2),
                       ((5,5), (-math.sqrt(3),1), math.pi/4 + math.pi/3))
         for (v1, v2, a) in test_angles:

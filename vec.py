@@ -6,6 +6,23 @@ is modified in-place.
 
 from __future__ import division
 from math import sqrt, acos
+try:
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip, repeat, chain
+    def zip_longest(*args, **kwds):
+        fillvalue = kwds.get('fillvalue')
+        def sentinel(counter=[fillvalue]*(len(args)-1)):
+            yield counter.pop()     # raises IndexError when count hits zero
+        iters = [chain(it, sentinel(), repeat(fillvalue)) for it in args]
+        try:
+            for tup in izip(*iters):
+                yield tup
+        except IndexError:
+            pass
+
+def vzip(*vecs):
+    return zip_longest(*vecs, fillvalue=0)
 
 def add(*args):
     """Calculate the vector addition of two or more vectors."""
@@ -15,11 +32,11 @@ def add(*args):
     return v_sum
 
 def _add(v1, v2):
-    return tuple((n1 + n2) for n1, n2 in zip(v1, v2))
+    return tuple((n1 + n2) for n1, n2 in vzip(v1, v2))
 
 def vecfrom(p1, p2):
     """Return the vector from p1 to p2."""
-    return tuple((n2 - n1) for n1, n2 in zip(p1, p2))
+    return tuple((n2 - n1) for n1, n2 in vzip(p1, p2))
 
 def dot(v1, v2):
     """Calculate the dot product of two vectors."""
