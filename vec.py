@@ -3,11 +3,11 @@
 All functions take constant arguments, and return a result; nothing
 is modified in-place.
 """
+from __future__ import division
 
-__all__ = ['add', 'vecfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
+__all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
            'mag', 'dist2', 'dist', 'norm', 'avg', 'angle']
 
-from __future__ import division
 from math import sqrt, acos
 try:
     from itertools import zip_longest
@@ -37,7 +37,7 @@ def add(*args):
 def _add(v1, v2):
     return tuple((n1 + n2) for n1, n2 in vzip(v1, v2))
 
-def vecfrom(p1, p2):
+def vfrom(p1, p2):
     """Return the vector from p1 to p2."""
     return tuple((n2 - n1) for n1, n2 in vzip(p1, p2))
 
@@ -75,11 +75,11 @@ def mag(v):
 
 def dist2(p1, p2):
     """Find the squared distance between two points."""
-    return mag2(vecfrom(p1, p2))
+    return mag2(vfrom(p1, p2))
 
 def dist(p1, p2):
     """Find the distance between two points."""
-    return mag(vecfrom(p1, p2))
+    return mag(vfrom(p1, p2))
 
 def norm(v, c=1):
     """Return a vector in the same direction as v, with magnitude c."""

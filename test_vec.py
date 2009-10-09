@@ -43,9 +43,9 @@ class TestVec(unittest.TestCase):
         self.assertEqual(add((1, 1), (3, 5)), (4, 6))
         self.assertEqual(add((1, 1, 1), (1, 1)), (2, 2, 1))
 
-    def test_vecfrom(self):
-        self.assertEqual(vecfrom((1, 1), (2, 2)), (1, 1))
-        self.assertEqual(vecfrom((0, 0), (1, 1, 1)), (1, 1, 1))
+    def test_vfrom(self):
+        self.assertEqual(vfrom((1, 1), (2, 2)), (1, 1))
+        self.assertEqual(vfrom((0, 0), (1, 1, 1)), (1, 1, 1))
 
     def test_mul(self):
         self.assertEqual(mul((2, 3), 2), (4, 6))
