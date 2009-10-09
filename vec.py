@@ -4,6 +4,9 @@ All functions take constant arguments, and return a result; nothing
 is modified in-place.
 """
 
+__all__ = ['add', 'vecfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
+           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle']
+
 from __future__ import division
 from math import sqrt, acos
 try:
