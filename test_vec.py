@@ -42,6 +42,10 @@ class TestVec(unittest.TestCase):
     def test_add(self):
         self.assertEqual(add((1, 1), (3, 5)), (4, 6))
         self.assertEqual(add((1, 1, 1), (1, 1)), (2, 2, 1))
+        self.assertEqual(
+            add(*((.1, .2, .3) for i in range(10))),
+            (1.0, 2.0, 3.0),
+        )
 
     def test_vfrom(self):
         self.assertEqual(vfrom((1, 1), (2, 2)), (1, 1))

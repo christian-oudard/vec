@@ -8,7 +8,7 @@ from __future__ import division
 __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
            'mag', 'dist2', 'dist', 'norm', 'avg', 'angle']
 
-from math import sqrt, acos
+from math import sqrt, acos, fsum
 try:
     from itertools import zip_longest
 except ImportError:
@@ -27,15 +27,9 @@ except ImportError:
 def vzip(*vecs):
     return zip_longest(*vecs, fillvalue=0)
 
-def add(*args):
+def add(*vecs):
     """Calculate the vector addition of two or more vectors."""
-    v_sum = args[0]
-    for v in args[1:]:
-        v_sum = _add(v_sum, v)
-    return v_sum
-
-def _add(v1, v2):
-    return tuple((n1 + n2) for n1, n2 in vzip(v1, v2))
+    return tuple(fsum(d) for d in vzip(*vecs))
 
 def vfrom(p1, p2):
     """Return the vector from p1 to p2."""
