@@ -27,9 +27,14 @@ except ImportError:
 def vzip(*vecs):
     return zip_longest(*vecs, fillvalue=0)
 
+def _iter_add(*vecs):
+    for dim in vzip(*vecs):
+        sum_func = fsum if any(isinstance(i, float) for i in dim) else sum
+        yield sum_func(dim)
+
 def add(*vecs):
     """Calculate the vector addition of two or more vectors."""
-    return tuple(fsum(d) for d in vzip(*vecs))
+    return tuple(_iter_add(*vecs))
 
 def vfrom(p1, p2):
     """Return the vector from p1 to p2."""

@@ -46,6 +46,10 @@ class TestVec(unittest.TestCase):
             add(*((.1, .2, .3) for i in range(10))),
             (1.0, 2.0, 3.0),
         )
+        # Don't use fsum unless there are floats.
+        self.assertEqual(str(add((1.0,), (2,))), '(3.0,)')
+        self.assertEqual(str(add((1.0, 1), (2.0, 2))), '(3.0, 3)')
+        self.assertEqual(str(add((1,), (2,))), '(3,)')
 
     def test_vfrom(self):
         self.assertEqual(vfrom((1, 1), (2, 2)), (1, 1))
