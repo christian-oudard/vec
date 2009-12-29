@@ -6,7 +6,7 @@ is modified in-place.
 from __future__ import division
 
 __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
-           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle']
+           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'perp']
 
 from math import sqrt, acos, fsum
 try:
@@ -43,14 +43,6 @@ def vfrom(p1, p2):
 def dot(v1, v2):
     """Calculate the dot product of two vectors."""
     return sum((n1 * n2) for n1, n2 in zip(v1, v2))
-
-def cross(v1, v2):
-    """Calculate the cross product of two vectors of size 3."""
-    x1, y1, z1 = v1
-    x2, y2, z2 = v2
-    return (y1*z2 - z1*y2,
-            z1*x2 - x1*z2,
-            x1*y2 - y1*x2)
 
 def mul(v, c):
     """Multiply a vector by a scalar."""
@@ -91,3 +83,16 @@ def avg(*args):
 def angle(v1, v2):
     """Find the angle in radians between two vectors."""
     return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
+
+def cross(v1, v2):
+    """Calculate the cross product of two vectors of size 3."""
+    x1, y1, z1 = v1
+    x2, y2, z2 = v2
+    return (y1*z2 - z1*y2,
+            z1*x2 - x1*z2,
+            x1*y2 - y1*x2)
+
+def perp(v):
+    """Return a perpendicular to a vector of size 2."""
+    x, y = v
+    return (y, -x)

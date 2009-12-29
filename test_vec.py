@@ -83,5 +83,33 @@ class TestVec(unittest.TestCase):
         for v in test_vectors:
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
 
+    def test_perp(self):
+        from cmath import phase
+
+        two_pi = 2 * math.pi
+        half_pi = math.pi / 2
+
+        def wrap_angle(a):
+            """Wrap an angle so that it is between -pi and pi."""
+            while a > math.pi:
+                a -= two_pi
+            while a < -math.pi:
+                a += two_pi
+            return a
+
+        self.assertEqual(perp((1, 2)), (2, -1))
+        for v in test_vectors:
+            if len(v) != 2:
+                continue
+            p = perp(v)
+            self.assertEqual(dot(v, p), 0)
+            self.assertEqual(angle(v, p), half_pi)
+
+            av = phase(complex(*v))
+            ap = phase(complex(*p))
+            self.assertEqual(wrap_angle(av - ap), half_pi)
+            self.assertEqual(wrap_angle(ap - av), -half_pi)
+
+
 if __name__ == '__main__':
     unittest.main()
