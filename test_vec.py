@@ -110,6 +110,16 @@ class TestVec(unittest.TestCase):
             self.assertEqual(wrap_angle(av - ap), half_pi)
             self.assertEqual(wrap_angle(ap - av), -half_pi)
 
+    def test_proj(self):
+        self.assertEqual(
+            proj((1, 1), (1, 0)),
+            (1, 0),
+        )
+        self.assertEqual(
+            proj((1, 3), (4, 2)),
+            (2, 1),
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

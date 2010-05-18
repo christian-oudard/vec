@@ -6,7 +6,7 @@ is modified in-place.
 from __future__ import division
 
 __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
-           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'perp']
+           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'perp', 'proj']
 
 from math import sqrt, acos, fsum
 try:
@@ -96,3 +96,7 @@ def perp(v):
     """Return a perpendicular to a vector of size 2."""
     x, y = v
     return (y, -x)
+
+def proj(v1, v2):
+    """Calculate the vector projection of v1 onto v2."""
+    return mul(v2, dot(v1, v2) / mag2(v2))
