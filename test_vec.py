@@ -19,6 +19,11 @@ specialvals = [
 ]
 
 class TestVec(unittest.TestCase):
+    def assertVecAlmostEqual(self, v1, v2):
+        self.assertEqual(len(v1), len(v2))
+        for f1, f2 in zip(v1, v2):
+            self.assertAlmostEqual(f1, f2)
+
     def test_mag(self):
         v = (3, -4)
         self.assertEqual(mag(v), 5) # 3-4-5 triangle
@@ -120,6 +125,13 @@ class TestVec(unittest.TestCase):
             (2, 1),
         )
 
+    def test_rotate(self):
+        v = (1, 0)
+        self.assertVecAlmostEqual(rotate(v, math.radians(0)), (1, 0))
+        self.assertVecAlmostEqual(rotate(v, math.radians(90)), (0, 1))
+        self.assertVecAlmostEqual(rotate(v, math.radians(180)), (-1, 0))
+        self.assertVecAlmostEqual(rotate(v, math.radians(-90)), (0, -1))
+        self.assertVecAlmostEqual(rotate(v, math.radians(30)), (0.8660254037844386, 0.5))
 
 if __name__ == '__main__':
     unittest.main()

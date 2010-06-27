@@ -6,9 +6,10 @@ is modified in-place.
 from __future__ import division
 
 __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
-           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'perp', 'proj']
+           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'rotate', 'perp',
+           'proj']
 
-from math import sqrt, acos, fsum
+from math import sqrt, acos, fsum, sin, cos
 try:
     from itertools import zip_longest
 except ImportError:
@@ -83,6 +84,16 @@ def avg(*args):
 def angle(v1, v2):
     """Find the angle in radians between two vectors."""
     return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
+
+def rotate(v, angle):
+    """Rotate a vector of size 2 counter-clockwise by the given angle."""
+    x, y = v
+    sin_a = sin(angle)
+    cos_a = cos(angle)
+    return (
+        x * cos_a - y * sin_a,
+        x * sin_a + y * cos_a,
+    )
 
 def cross(v1, v2):
     """Calculate the cross product of two vectors of size 3."""
