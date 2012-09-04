@@ -37,6 +37,10 @@ def add(*vecs):
     """Calculate the vector addition of two or more vectors."""
     return tuple(_iter_add(*vecs))
 
+def sub(v1, v2):
+    """Subtract one vector from another"""
+    return vfrom(v2, v1)
+
 def vfrom(p1, p2):
     """Return the vector from p1 to p2."""
     return tuple((n2 - n1) for n1, n2 in vzip(p1, p2))
