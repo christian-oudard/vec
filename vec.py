@@ -83,17 +83,17 @@ def norm(v, c=1):
 
 def avg(*args):
     """Find the vector average of two or more points."""
-    return div(add(*args), len(args));
+    return div(add(*args), len(args))
 
 def angle(v1, v2):
     """Find the angle in radians between two vectors."""
     return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
 
-def rotate(v, angle):
+def rotate(v, theta):
     """Rotate a vector of size 2 counter-clockwise by the given angle."""
     x, y = v
-    sin_a = sin(angle)
-    cos_a = cos(angle)
+    sin_a = sin(theta)
+    cos_a = cos(theta)
     return (
         x * cos_a - y * sin_a,
         x * sin_a + y * cos_a,
