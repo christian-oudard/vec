@@ -7,9 +7,9 @@ from __future__ import division
 
 __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
            'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'rotate', 'perp',
-           'proj']
+           'proj', 'heading']
 
-from math import sqrt, acos, fsum, sin, cos
+from math import sqrt, acos, fsum, sin, cos, atan2
 try:
     from itertools import zip_longest
 except ImportError:
@@ -90,7 +90,7 @@ def angle(v1, v2):
     return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
 
 def rotate(v, theta):
-    """Rotate a vector of size 2 counter-clockwise by the given angle."""
+    """Rotate a two-dimensional vector counter-clockwise by the given angle."""
     x, y = v
     sin_a = sin(theta)
     cos_a = cos(theta)
@@ -100,7 +100,7 @@ def rotate(v, theta):
     )
 
 def cross(v1, v2):
-    """Calculate the cross product of two vectors of size 3."""
+    """Calculate the cross product of two three-dimensional vectors."""
     x1, y1, z1 = v1
     x2, y2, z2 = v2
     return (y1*z2 - z1*y2,
@@ -108,10 +108,19 @@ def cross(v1, v2):
             x1*y2 - y1*x2)
 
 def perp(v):
-    """Return a perpendicular to a vector of size 2."""
+    """Return a perpendicular to a two-dimensional vector."""
     x, y = v
     return (y, -x)
 
 def proj(v1, v2):
     """Calculate the vector projection of v1 onto v2."""
     return mul(v2, dot(v1, v2) / mag2(v2))
+
+def heading(v):
+    """
+    Return the heading angle of the two-dimensional vector v.
+
+    This is equivalent to the theta value of v in polar coordinates.
+    """
+    x, y = v
+    return atan2(y, x)

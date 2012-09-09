@@ -74,7 +74,7 @@ class TestVec(unittest.TestCase):
         for v in test_vectors:
             self.assertEqual(dot(v, (0, 0)), 0)
 
-    def test_angle(self):
+    def test_angle_heading(self):
         test_angles = (((0,1), (1,0), math.pi/2),
                       ((7,-7), (1,0), math.pi/4),
                       ((2,0), (-1,0), math.pi),
@@ -85,6 +85,8 @@ class TestVec(unittest.TestCase):
         for (v1, v2, a) in test_angles:
             self.assertAlmostEqual(angle(v1, v2), a)
             self.assertAlmostEqual(angle(v2, v1), a) # both orders
+            self.assertAlmostEqual(abs(heading(v1) - heading(v2)), a)
+            self.assertAlmostEqual(abs(heading(v2) - heading(v1)), a)
         for v in test_vectors:
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
 
