@@ -121,6 +121,10 @@ def heading(v):
     Return the heading angle of the two-dimensional vector v.
 
     This is equivalent to the theta value of v in polar coordinates.
+
+    Raises ValueError if passed a zero vector.
     """
+    if v == (0, 0):
+        raise ValueError('A zero vector has no heading.')
     x, y = v
     return atan2(y, x)

@@ -90,6 +90,12 @@ class TestVec(unittest.TestCase):
         for v in test_vectors:
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
 
+    def test_zero_heading_error(self):
+        self.assertRaises(
+            ValueError,
+            lambda: heading((0, 0)),
+        )
+
     def test_perp(self):
         from cmath import phase
 
