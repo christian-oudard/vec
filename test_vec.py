@@ -74,7 +74,7 @@ class TestVec(unittest.TestCase):
         for v in test_vectors:
             self.assertEqual(dot(v, (0, 0)), 0)
 
-    def test_angle_heading(self):
+    def test_angle(self):
         test_angles = (((0,1), (1,0), math.pi/2),
                       ((7,-7), (1,0), math.pi/4),
                       ((2,0), (-1,0), math.pi),
@@ -89,6 +89,16 @@ class TestVec(unittest.TestCase):
             self.assertAlmostEqual(abs(heading(v2) - heading(v1)), a)
         for v in test_vectors:
             self.assertAlmostEqual(angle(v, v), 0) # same vector makes 0 radians
+
+    def test_heading(self):
+        for v in test_vectors:
+            if len(v) != 2:
+                continue
+            h = heading(v)
+            self.assertVecAlmostEqual(
+                v,
+                from_heading(h, mag(v)),
+            )
 
     def test_zero_heading_error(self):
         self.assertRaises(
@@ -110,18 +120,18 @@ class TestVec(unittest.TestCase):
                 a += two_pi
             return a
 
-        self.assertEqual(perp((1, 2)), (2, -1))
+        self.assertEqual(perp((1, 2)), (-2, 1))
         for v in test_vectors:
             if len(v) != 2:
                 continue
             p = perp(v)
+            self.assertAlmostEqual(angle(v, p), half_pi)
             self.assertEqual(dot(v, p), 0)
-            self.assertEqual(angle(v, p), half_pi)
 
             av = phase(complex(*v))
             ap = phase(complex(*p))
-            self.assertEqual(wrap_angle(av - ap), half_pi)
-            self.assertEqual(wrap_angle(ap - av), -half_pi)
+            self.assertAlmostEqual(wrap_angle(av - ap), -half_pi)
+            self.assertAlmostEqual(wrap_angle(ap - av), half_pi)
 
     def test_proj(self):
         self.assertEqual(
