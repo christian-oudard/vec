@@ -75,13 +75,16 @@ class TestVec(unittest.TestCase):
             self.assertEqual(dot(v, (0, 0)), 0)
 
     def test_angle(self):
-        test_angles = (((0,1), (1,0), math.pi/2),
-                      ((7,-7), (1,0), math.pi/4),
-                      ((2,0), (-1,0), math.pi),
-                      ((1,0), (1,math.sqrt(3)), math.pi/3),
-                      ((3,0), (math.sqrt(3),1), math.pi/6),
-                      ((2,2), (1,-1), math.pi/2),
-                      ((5,5), (-math.sqrt(3),1), math.pi/4 + math.pi/3))
+        test_angles = [
+            ((0,1), (1,0), math.pi/2),
+            ((7,-7), (1,0), math.pi/4),
+            ((2,0), (-1,0), math.pi),
+            ((1,0), (1,math.sqrt(3)), math.pi/3),
+            ((3,0), (math.sqrt(3),1), math.pi/6),
+            ((2,2), (1,-1), math.pi/2),
+            ((5,5), (-math.sqrt(3),1), math.pi/4 + math.pi/3),
+            ((9.781476007338057, 2.0791169081775935), (9.781476007338057, 2.0791169081775935), 0.0),
+        ]
         for (v1, v2, a) in test_angles:
             self.assertAlmostEqual(angle(v1, v2), a)
             self.assertAlmostEqual(angle(v2, v1), a) # both orders

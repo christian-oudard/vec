@@ -93,7 +93,15 @@ def avg(*args):
 
 def angle(v1, v2):
     """Find the angle in radians between two vectors."""
-    return acos(dot(v1, v2) / (mag(v1) * mag(v2)))
+    ratio = dot(v1, v2) / (mag(v1) * mag(v2))
+    ratio = _clamp(ratio, -1.0, 1.0)
+    return acos(ratio)
+
+
+def _clamp(value, lo, hi):
+    value = max(lo, value)
+    value = min(hi, value)
+    return value
 
 
 def rotate(v, theta):
