@@ -6,7 +6,7 @@ import math
 
 from vec import (
     add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
-    heading, from_heading
+    heading, from_heading, intersect_lines
 )
 
 test_vectors = [
@@ -162,6 +162,7 @@ def test_proj():
         == [2, 1]
     )
 
+
 def test_rotate():
     v = [1, 0]
     assert_vec_almost_equal(rotate(v, math.radians(0)), (1, 0))
@@ -182,3 +183,34 @@ def test_dist():
 
 def test_cross():
     assert cross([3, -3, 1], [4, 9, 2]) == [-15, -2, 39]
+
+
+def test_intersect_lines():
+    assert_vec_almost_equal(
+        intersect_lines(
+            ([0, 0], [10, 10]),
+            ([0, 10], [10, 0]),
+        ),
+        [5, 5],
+    )
+    assert_vec_almost_equal(
+        intersect_lines(
+            ([0, 0], [10, 0]),
+            ([5, 0], [15, 0.01]),
+        ),
+        [5, 0],
+    )
+    assert intersect_lines(
+        ([0, 0], [1, 0]),
+        ([0, 1], [1, 1]),
+    ) is None
+    assert intersect_lines(
+        ([0, 0], [1, 0]),
+        ([2, 1], [2, -1]),
+        segment=True,
+    ) is None
+    assert intersect_lines(
+        ([2, 1], [2, -1]),
+        ([0, 0], [1, 0]),
+        segment=True,
+    ) is None

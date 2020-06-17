@@ -12,12 +12,17 @@ __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
 
 from math import sqrt, acos, fsum, sin, cos, atan2
 from itertools import zip_longest
-from typing import Iterator, List, Tuple
+from typing import Iterator, List, Tuple, Optional
+
 
 epsilon = 1e-10
 
 
-Vec = List[float]
+def float_equal(a: float, b: float) -> bool:
+    return abs(a - b) < epsilon
+
+
+Vec = List[float]  # A vector is a sequence of numbers.
 
 
 def _zip(*vecs: Vec) -> Iterator[Tuple[float, float]]:
@@ -98,7 +103,7 @@ def angle(v1: Vec, v2: Vec) -> float:
     return acos(ratio)
 
 
-def _clamp(value, lo, hi):
+def _clamp(value: float, lo: float, hi: float) -> float:
     value = max(lo, value)
     value = min(hi, value)
     return value
@@ -141,7 +146,7 @@ def proj(v1: Vec, v2: Vec) -> Vec:
     return mul(v2, dot(v1, v2) / mag2(v2))
 
 
-def heading(v):
+def heading(v: Vec) -> float:
     """
     Return the heading angle of the two-dimensional vector v.
 
@@ -155,8 +160,52 @@ def heading(v):
     return atan2(y, x)
 
 
-def from_heading(heading, c=1):
+def from_heading(heading: float, c: float = 1) -> Vec:
     """
     Create a two-dimensional vector with the specified heading of the specified magnitude.
     """
-    return rotate((c, 0), heading)
+    return rotate([c, 0], heading)
+
+
+# Geometry
+
+Line = Tuple[Vec, Vec]  # A line is defined by two points.
+
+
+def bisector(a: Vec, b: Vec) -> Line:
+    mid = avg(a, b)
+    ab = vfrom(a, b)
+    return (mid, mid + perp(ab))
+
+
+def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional[Vec]:
+    """
+    Find the intersection of lines a-b and c-d.
+
+    If the "segment" argument is true, treat the lines as segments, and check
+    whether the intersection point is off the end of either segment.
+    """
+    a, b = line1
+    c, d = line2
+
+    # Reference:
+    # http://geomalgorithms.com/a05-_intersect-1.html
+    u = vfrom(a, b)
+    v = vfrom(c, d)
+    w = vfrom(c, a)
+
+    u_perp_dot_v = dot(perp(u), v)
+    if float_equal(u_perp_dot_v, 0):
+        return None  # We have collinear segments, no single intersection.
+
+    v_perp_dot_w = dot(perp(v), w)
+    s = v_perp_dot_w / u_perp_dot_v
+    if segment and (s < 0 or s > 1):
+        return None
+
+    u_perp_dot_w = dot(perp(u), w)
+    t = u_perp_dot_w / u_perp_dot_v
+    if segment and (t < 0 or t > 1):
+        return None
+
+    return add(a, mul(u, s))
