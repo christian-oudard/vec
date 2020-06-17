@@ -163,9 +163,22 @@ def test_proj():
     )
 
 def test_rotate():
-    v = (1, 0)
+    v = [1, 0]
     assert_vec_almost_equal(rotate(v, math.radians(0)), (1, 0))
     assert_vec_almost_equal(rotate(v, math.radians(90)), (0, 1))
     assert_vec_almost_equal(rotate(v, math.radians(180)), (-1, 0))
     assert_vec_almost_equal(rotate(v, math.radians(-90)), (0, -1))
     assert_vec_almost_equal(rotate(v, math.radians(30)), (0.8660254037844386, 0.5))
+
+
+def test_avg():
+    assert avg([1, 2], [2, 3], [3, 1]) == [2, 2]
+
+
+def test_dist():
+    assert dist2([3, 0], [0, 4]) == 25
+    assert dist([3, 0], [0, 4]) == 5
+
+
+def test_cross():
+    assert cross([3, -3, 1], [4, 9, 2]) == [-15, -2, 39]
