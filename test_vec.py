@@ -1,12 +1,10 @@
-#! /usr/bin/env python
-
 from pytest import approx, raises
 
-import math
+from math import sqrt, pi, radians
 
 from vec import (
     add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
-    heading, from_heading, intersect_lines
+    heading, from_heading, bisector, intersect_lines, circle_3_points
 )
 
 test_vectors = [
@@ -89,14 +87,14 @@ def test_dot():
 
 def test_angle():
     test_angles = [
-        ((0, 1), (1, 0), math.pi/2),
-        ((7, -7), (1, 0), math.pi/4),
-        ((2, 0), (-1, 0), math.pi),
-        ((1, 0), (1, math.sqrt(3)), math.pi/3),
-        ((3, 0), (math.sqrt(3), 1), math.pi/6),
-        ((2, 2), (1, -1), math.pi/2),
-        ((5, 5), (-math.sqrt(3), 1), math.pi/4 + math.pi/3),
-        ((9.781476007338057, 2.0791169081775935), (9.781476007338057, 2.0791169081775935), 0.0),
+        ([0, 1], [1, 0], pi/2),
+        ([7, -7], [1, 0], pi/4),
+        ([2, 0], [-1, 0], pi),
+        ([1, 0], [1, sqrt(3)], pi/3),
+        ([3, 0], [sqrt(3), 1], pi/6),
+        ([2, 2], [1, -1], pi/2),
+        ([5, 5], [-sqrt(3), 1], pi/4 + pi/3),
+        ([9.781476007338057, 2.0791169081775935], (9.781476007338057, 2.0791169081775935), 0.0),
     ]
     for (v1, v2, a) in test_angles:
         assert angle(v1, v2) == approx(a)
@@ -127,14 +125,14 @@ def test_zero_heading_error():
 def test_perp():
     from cmath import phase
 
-    two_pi = 2 * math.pi
-    half_pi = math.pi / 2
+    two_pi = 2 * pi
+    half_pi = pi / 2
 
     def wrap_angle(a):
         """Wrap an angle so that it is between -pi and pi."""
-        while a > math.pi:
+        while a > pi:
             a -= two_pi
-        while a < -math.pi:
+        while a < -pi:
             a += two_pi
         return a
 
@@ -165,11 +163,11 @@ def test_proj():
 
 def test_rotate():
     v = [1, 0]
-    assert_vec_almost_equal(rotate(v, math.radians(0)), (1, 0))
-    assert_vec_almost_equal(rotate(v, math.radians(90)), (0, 1))
-    assert_vec_almost_equal(rotate(v, math.radians(180)), (-1, 0))
-    assert_vec_almost_equal(rotate(v, math.radians(-90)), (0, -1))
-    assert_vec_almost_equal(rotate(v, math.radians(30)), (0.8660254037844386, 0.5))
+    assert_vec_almost_equal(rotate(v, radians(0)), (1, 0))
+    assert_vec_almost_equal(rotate(v, radians(90)), (0, 1))
+    assert_vec_almost_equal(rotate(v, radians(180)), (-1, 0))
+    assert_vec_almost_equal(rotate(v, radians(-90)), (0, -1))
+    assert_vec_almost_equal(rotate(v, radians(30)), (0.8660254037844386, 0.5))
 
 
 def test_avg():
@@ -214,3 +212,13 @@ def test_intersect_lines():
         ([0, 0], [1, 0]),
         segment=True,
     ) is None
+
+
+def test_bisector():
+    assert bisector([0, 0], [1, 1]) == ([1/2, 1/2], [0, 1])
+
+
+def test_circle_3_points():
+    circle = circle_3_points([0, 0], [1, 0], [0, 1])
+    assert circle.c == [1/2, 1/2]
+    assert circle.r == approx(sqrt(2) / 2)

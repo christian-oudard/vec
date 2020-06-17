@@ -10,6 +10,7 @@ __all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
            'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'rotate', 'perp',
            'proj', 'heading', 'from_heading']
 
+from collections import namedtuple
 from math import sqrt, acos, fsum, sin, cos, atan2
 from itertools import zip_longest
 from typing import Iterator, List, Tuple, Optional
@@ -23,6 +24,8 @@ def float_equal(a: float, b: float) -> bool:
 
 
 Vec = List[float]  # A vector is a sequence of numbers.
+Line = Tuple[Vec, Vec]  # A line is defined by two points.
+Circle = namedtuple('circle', 'c r')  # A circle is defined by a center and a radius.
 
 
 def _zip(*vecs: Vec) -> Iterator[Tuple[float, float]]:
@@ -169,13 +172,11 @@ def from_heading(heading: float, c: float = 1) -> Vec:
 
 # Geometry
 
-Line = Tuple[Vec, Vec]  # A line is defined by two points.
-
-
 def bisector(a: Vec, b: Vec) -> Line:
     mid = avg(a, b)
-    ab = vfrom(a, b)
-    return (mid, mid + perp(ab))
+    normal = perp(vfrom(mid, b))
+    p = add(mid, normal)
+    return (mid, p)
 
 
 def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional[Vec]:
@@ -209,3 +210,11 @@ def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional
         return None
 
     return add(a, mul(u, s))
+
+
+def circle_3_points(a, b, c):
+    center = intersect_lines(bisector(a, b), bisector(b, c))
+    if center is None:
+        return None
+    radius = mag(vfrom(center, a))
+    return Circle(center, radius)
