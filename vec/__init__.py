@@ -224,11 +224,30 @@ def circle_3_points(a: Vec, b: Vec, c: Vec) -> Optional[Circle]:
     return Circle(center, radius)
 
 
-def circle_2_points_radius(a: Vec, b: Vec, radius: float) -> Circle:
-    i1, i2 = intersect_circles(Circle(a, radius), Circle(b, radius))
+def circle_2_points_radius(a: Vec, b: Vec, radius: float) -> Optional[Circle]:
+    """
+    Find the circle that intersects the two given points with the given radius.
+    In general, there will be two solutions. The lefthand solution is given by specifying a positive radius,
+    and the righthand solution is given by specifying a negative radius.
+    """
+    ccw = radius > 0
+    radius = abs(radius)
+    points = intersect_circles(Circle(a, radius), Circle(b, radius))
+    if len(points) == 0:
+        return None
+    elif len(points) == 1:
+        return Circle(points[0], radius)
+    else:  # len(points) == 2
+        i1, i2 = points
+        assert side(a, b, i1) == 1
+        assert side(a, b, i2) == -1
+        if ccw:
+            return Circle(i1, radius)
+        else:
+            return Circle(i2, radius)
 
 
-def intersect_circles(circ1: Circle, circ2: Circle):
+def intersect_circles(circ1: Circle, circ2: Circle) -> List[Vec]:
     radius1 = abs(circ1.r)
     radius2 = abs(circ2.r)
 

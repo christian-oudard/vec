@@ -4,7 +4,8 @@ from math import sqrt, pi, radians
 
 from vec import (
     Circle, equal, add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
-    heading, from_heading, bisector, intersect_lines, intersect_circles, circle_3_points, side
+    heading, from_heading, bisector, side, intersect_lines, intersect_circles, circle_3_points,
+    circle_2_points_radius
 )
 
 test_vectors = [
@@ -222,6 +223,25 @@ def test_circle_3_points():
     circle = circle_3_points([0, 0], [1, 0], [0, 1])
     assert circle.c == [1/2, 1/2]
     assert circle.r == approx(sqrt(2) / 2)
+
+
+def test_circle_2_points_radius():
+    # No solution.
+    circle = circle_2_points_radius([-1, 0], [1, 0], 0.5)
+    assert circle is None
+
+    # One solution at midpoint.
+    circle = circle_2_points_radius([-1, 0], [1, 0], 1)
+    assert circle.c == [0, 0]
+    assert circle.r == 1
+
+    # Two solutions, based on sign of radius.
+    circle = circle_2_points_radius([-1, 0], [1, 0], sqrt(2))
+    assert circle.c == [0, 1]
+    assert circle.r == approx(sqrt(2))
+    circle = circle_2_points_radius([-1, 0], [1, 0], -sqrt(2))
+    assert circle.c == [0, -1]
+    assert circle.r == approx(sqrt(2))
 
 
 def test_side():
