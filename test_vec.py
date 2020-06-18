@@ -3,8 +3,8 @@ from pytest import approx, raises
 from math import sqrt, pi, radians
 
 from vec import (
-    add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
-    heading, from_heading, bisector, intersect_lines, circle_3_points
+    Circle, equal, add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
+    heading, from_heading, bisector, intersect_lines, intersect_circles, circle_3_points, side
 )
 
 test_vectors = [
@@ -222,3 +222,67 @@ def test_circle_3_points():
     circle = circle_3_points([0, 0], [1, 0], [0, 1])
     assert circle.c == [1/2, 1/2]
     assert circle.r == approx(sqrt(2) / 2)
+
+
+def test_side():
+    assert side([0, 2], [3, 0], [4, 4]) == 1
+    assert side([3, 0], [0, 2], [4, 4]) == -1
+    assert side([3, 0], [0, 2], [-3, 4]) == 0
+
+
+def test_intersect_circles():
+    # Coincident circles, no single intersection point.
+    assert intersect_circles(
+        Circle([0, 0], 1),
+        Circle([0, 0], 1),
+    ) == []
+
+    # No intersection, separated circles.
+    assert intersect_circles(
+        Circle([0, 0], 1),
+        Circle([5, 0], 1),
+    ) == []
+
+    # No intersection, concentric circles.
+    assert intersect_circles(
+        Circle([0, 0], 1),
+        Circle([0, 0], 2),
+    ) == []
+
+    # One point, exterior tangent.
+    assert intersect_circles(
+        Circle([0, 0], 1),
+        Circle([2, 0], 1),
+    ) == [[1, 0]]
+
+    # One point, interior tangent.
+    assert intersect_circles(
+        Circle([0, 0], 2),
+        Circle([1, 0], 1),
+    ) == [[2, 0]]
+
+    assert intersect_circles(
+        Circle([0, 1], 1.5),
+        Circle([0, 0], 2.5),
+    ) == [[0, 2.5]]
+
+    # Two points, same size circles.
+    assert intersect_circles(
+        Circle([-1, 0], sqrt(2)),
+        Circle([1, 0], sqrt(2)),
+    ) == [[0, 1], [0, -1]]
+
+    # Two points, different size circles.
+    p1, p2 = intersect_circles(
+        Circle([0, 0], sqrt(2)),
+        Circle([1, 0], 1),
+    )
+    assert equal(p1, [1, 1])
+    assert equal(p2, [1, -1])
+
+
+def test_intersect_circles_numerical():
+    assert intersect_circles(
+        Circle([-27.073924841728974, 65.92689560740814], -1.25),
+        Circle([0.5, 0.5], -72.25000000000001),
+    ) == [[-27.55938126499886, 67.07877757232733]]

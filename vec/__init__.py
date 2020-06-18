@@ -19,13 +19,17 @@ from typing import Iterator, List, Tuple, Optional
 epsilon = 1e-10
 
 
+Vec = List[float]  # A vector is a sequence of numbers.
+Line = Tuple[Vec, Vec]  # A line is defined by two points.
+Circle = namedtuple('circle', 'c r')  # A circle is defined by a center and a radius.
+
+
 def float_equal(a: float, b: float) -> bool:
     return abs(a - b) < epsilon
 
 
-Vec = List[float]  # A vector is a sequence of numbers.
-Line = Tuple[Vec, Vec]  # A line is defined by two points.
-Circle = namedtuple('circle', 'c r')  # A circle is defined by a center and a radius.
+def equal(a: Vec, b: Vec) -> bool:
+    return mag2(vfrom(a, b)) < epsilon
 
 
 def _zip(*vecs: Vec) -> Iterator[Tuple[float, float]]:
@@ -212,9 +216,99 @@ def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional
     return add(a, mul(u, s))
 
 
-def circle_3_points(a, b, c):
+def circle_3_points(a: Vec, b: Vec, c: Vec) -> Optional[Circle]:
     center = intersect_lines(bisector(a, b), bisector(b, c))
     if center is None:
         return None
     radius = mag(vfrom(center, a))
     return Circle(center, radius)
+
+
+def circle_2_points_radius(a: Vec, b: Vec, radius: float) -> Circle:
+    i1, i2 = intersect_circles(Circle(a, radius), Circle(b, radius))
+
+
+def intersect_circles(circ1: Circle, circ2: Circle):
+    radius1 = abs(circ1.r)
+    radius2 = abs(circ2.r)
+
+    if radius2 > radius1:
+        return intersect_circles(circ2, circ1)
+
+    transverse = vfrom(circ1.c, circ2.c)
+    dist = mag(transverse)
+
+    # Check for identical or concentric circles. These will have either
+    # no points in common or all points in common, and in either case, we
+    # return an empty list.
+    if equal(circ1.c, circ2.c):
+        return []
+
+    # Check for exterior or interior tangent.
+    radius_sum = radius1 + radius2
+    radius_difference = abs(radius1 - radius2)
+    if (
+        float_equal(dist, radius_sum)
+        or float_equal(dist, radius_difference)
+    ):
+        return [
+            add(
+                circ1.c,
+                norm(transverse, radius1)
+            ),
+        ]
+
+    # Check for non intersecting circles.
+    if dist > radius_sum or dist < radius_difference:
+        return []
+
+    # If we've reached this point, we know that the two circles intersect
+    # in two distinct points.
+    # Reference:
+    # http://mathworld.wolfram.com/Circle-CircleIntersection.html
+
+    # Pretend that the circles are arranged along the x-axis.
+    # Find the x-value of the intersection points, which is the same for both
+    # points. Then find the chord length "a" between the two intersection
+    # points, and use vector math to find the points.
+    dist2 = mag2(transverse)
+    x = (dist2 - radius2**2 + radius1**2) / (2 * dist)
+    a = (
+        (1 / dist)
+        * sqrt(
+            (-dist + radius1 - radius2)
+            * (-dist - radius1 + radius2)
+            * (-dist + radius1 + radius2)
+            * (dist + radius1 + radius2)
+        )
+    )
+    chord_middle = add(
+        circ1.c,
+        norm(transverse, x),
+    )
+    normal = perp(transverse)
+    return [
+        add(chord_middle, norm(normal, a / 2)),
+        add(chord_middle, norm(normal, -a / 2)),
+    ]
+
+
+def side(a: Vec, b: Vec, c: Vec) -> int:
+    """
+    Determine whether the points a, b, and c are clockwise, counterclockwise, or collinear.
+    Return -1 for clockwise, +1 for counterclockwise, and 0 for collinear.
+
+    Reference:
+    http://geomalgorithms.com/a01-_area.html
+    """
+    ax, ay = a
+    bx, by = b
+    cx, cy = c
+
+    val = (bx - ax) * (cy - ay) - (cx - ax) * (by - ay)
+    if abs(val) < epsilon:
+        return 0
+    elif val > 0:
+        return 1
+    else:  # val < 0
+        return -1
