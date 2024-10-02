@@ -3,8 +3,8 @@ from pytest import approx, raises
 from math import sqrt, pi, radians
 
 from vec import (
-    Circle, equal, add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate, perp, proj,
-    heading, from_heading, bisector, side, intersect_lines, intersect_circles, circle_3_points,
+    Circle, equal, unique, add, vfrom, dot, cross, mul, div, neg, mag2, mag, dist2, dist, norm, avg, angle, rotate,
+    perp, proj, heading, from_heading, bisector, side, intersect_lines, intersect_circles, circle_3_points,
     circle_2_points_radius
 )
 
@@ -306,3 +306,13 @@ def test_intersect_circles_numerical():
         Circle([-27.073924841728974, 65.92689560740814], -1.25),
         Circle([0.5, 0.5], -72.25000000000001),
     ) == [[-27.55938126499886, 67.07877757232733]]
+
+
+def test_equal():
+    assert equal([1, 2], [1, 2])
+    assert not equal([1, 2], [2, 1])
+    assert equal([1.0000000000000001, 2], [1, 2])
+
+
+def test_unique():
+    assert list(unique([[1, 2], [1, 2], [3, 4], [3, 4]])) == [[1, 2], [3, 4]]

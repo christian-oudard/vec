@@ -4,12 +4,6 @@ All functions take constant arguments, and return a result; nothing
 is modified in-place.
 """
 
-from __future__ import division
-
-__all__ = ['add', 'vfrom', 'dot', 'cross', 'mul', 'div', 'neg', 'mag2',
-           'mag', 'dist2', 'dist', 'norm', 'avg', 'angle', 'rotate', 'perp',
-           'proj', 'heading', 'from_heading']
-
 from collections import namedtuple
 from math import sqrt, acos, fsum, sin, cos, atan2
 from itertools import zip_longest
@@ -18,18 +12,30 @@ from typing import Iterator, List, Tuple, Optional
 
 epsilon = 1e-10
 
-
 Vec = List[float]  # A vector is a sequence of numbers.
 Line = Tuple[Vec, Vec]  # A line is defined by two points.
 Circle = namedtuple('circle', 'c r')  # A circle is defined by a center and a radius.
 
 
-def float_equal(a: float, b: float) -> bool:
+def _float_equal(a: float, b: float) -> bool:
     return abs(a - b) < epsilon
 
 
 def equal(a: Vec, b: Vec) -> bool:
-    return mag2(vfrom(a, b)) < epsilon
+    """Check if two vectors are equal, using a floating-point epsilon comparison."""
+    return all( _float_equal(ai, bi) for (ai, bi) in zip(a, b) )
+
+
+def unique(vecs: List[Vec]) -> Iterator[Vec]:
+    """Yield unique elements of an iterable, using a floating-point epsilon comparison."""
+    seen = []
+    for v in vecs:
+        for seen_v in seen:
+            if equal(v, seen_v):
+                break
+        else:
+            seen.append(v)
+            yield v
 
 
 def _zip(*vecs: Vec) -> Iterator[Tuple[float, float]]:
@@ -200,7 +206,7 @@ def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional
     w = vfrom(c, a)
 
     u_perp_dot_v = dot(perp(u), v)
-    if float_equal(u_perp_dot_v, 0):
+    if _float_equal(u_perp_dot_v, 0):
         return None  # We have collinear segments, no single intersection.
 
     v_perp_dot_w = dot(perp(v), w)
@@ -267,8 +273,8 @@ def intersect_circles(circ1: Circle, circ2: Circle) -> List[Vec]:
     radius_sum = radius1 + radius2
     radius_difference = abs(radius1 - radius2)
     if (
-        float_equal(dist, radius_sum)
-        or float_equal(dist, radius_difference)
+        _float_equal(dist, radius_sum)
+        or _float_equal(dist, radius_difference)
     ):
         return [
             add(
