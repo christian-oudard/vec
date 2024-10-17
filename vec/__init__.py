@@ -220,10 +220,10 @@ def intersect_lines(line1: Line, line2: Line, segment: bool = False, include_end
         return result
 
     # Handle segment endpoints.
-    for m in [s, t]
+    for m in [s, t]:
         if (
             _float_equal(m, 0) or
-            _float_equal(m, 1) or
+            _float_equal(m, 1)
         ):
             if include_endpoints:
                 return result
