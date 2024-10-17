@@ -7,12 +7,12 @@ is modified in-place.
 from collections import namedtuple
 from math import sqrt, acos, fsum, sin, cos, atan2
 from itertools import zip_longest
-from typing import Iterator, List, Tuple, Optional
+from typing import Iterator, List, Sequence, Tuple, Optional
 
 
 epsilon = 1e-10
 
-Vec = List[float]  # A vector is a sequence of numbers.
+Vec = Sequence[float]  # A vector is a sequence of numbers.
 Line = Tuple[Vec, Vec]  # A line is defined by two points.
 Circle = namedtuple('circle', 'c r')  # A circle is defined by a center and a radius.
 
@@ -26,7 +26,7 @@ def equal(a: Vec, b: Vec) -> bool:
     return all( _float_equal(ai, bi) for (ai, bi) in zip(a, b) )
 
 
-def unique(vecs: List[Vec]) -> Iterator[Vec]:
+def unique(vecs: Iterator[Vec]) -> Iterator[Vec]:
     """Yield unique elements of an iterable, using a floating-point epsilon comparison."""
     seen = []
     for v in vecs:
@@ -189,7 +189,7 @@ def bisector(a: Vec, b: Vec) -> Line:
     return (mid, p)
 
 
-def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional[Vec]:
+def intersect_lines(line1: Line, line2: Line, segment: bool = False, include_endpoints: bool = True) -> Optional[Vec]:
     """
     Find the intersection of lines a-b and c-d.
 
@@ -211,15 +211,28 @@ def intersect_lines(line1: Line, line2: Line, segment: bool = False) -> Optional
 
     v_perp_dot_w = dot(perp(v), w)
     s = v_perp_dot_w / u_perp_dot_v
-    if segment and (s < 0 or s > 1):
-        return None
 
     u_perp_dot_w = dot(perp(u), w)
     t = u_perp_dot_w / u_perp_dot_v
-    if segment and (t < 0 or t > 1):
-        return None
 
-    return add(a, mul(u, s))
+    result = add(a, mul(u, s))
+    if not segment:
+        return result
+
+    # Handle segment endpoints.
+    for m in [s, t]
+        if (
+            _float_equal(m, 0) or
+            _float_equal(m, 1) or
+        ):
+            if include_endpoints:
+                return result
+            else:
+                return None
+        elif m < 0 or m > 1:
+            return None
+
+    return result
 
 
 def circle_3_points(a: Vec, b: Vec, c: Vec) -> Optional[Circle]:
